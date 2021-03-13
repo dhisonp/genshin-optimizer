@@ -116,7 +116,7 @@ const char = {
           text: "Electro Sigil Duration",
           value: "18s",
         }],
-        conditional: (tlvl, c) => c >= 6 && {
+        conditional: (tlvl, c) => ({
           type: "character",
           conditionalKey: "ElectroSigil",
           condition: "Electro Sigil",
@@ -125,7 +125,7 @@ const char = {
           stats: {
             enerRech_: 20,
           },
-        }
+        }),
       }],
     },
     burst: {
@@ -166,7 +166,7 @@ const char = {
           text: "Energy Cost",
           value: 80,
         }],
-        conditional: (tlvl, c) => c >= 6 && {
+        conditional: (tlvl, c) => ({
           type: "character",
           conditionalKey: "LightningFang",
           condition: "Lightning Fang",
@@ -179,7 +179,7 @@ const char = {
           fields: [{
             text: "Increases resistance to interruption"
           }]
-        }
+        })
       }],
 
     },
@@ -288,7 +288,7 @@ const char = {
         text: <span>Every 10s, Razor's sword charges up, causing the next Normal Attack to release lightning that deals 100% of Razor's ATK as <span className="text-electro">Electro DMG</span>. When Razor is not using <b>Lightning Fang</b>, a lightning strike on an opponent will grant Razor an Electro Sigil for <b>Claw and Thunder</b>.</span>,
         fields: [(con) => con >= 6 && {
           text: "Lupus Fulguris DMG",
-          formulaText: (tlvl, stats) => <span>10% {Stat.printStat(getTalentStatKey("electro", stats), stats)}</span>,
+          formulaText: (tlvl, stats) => <span>100% {Stat.printStat(getTalentStatKey("electro", stats), stats)}</span>,
           formula: formula.constellation6.dmg,
           variant: (tlvl, stats) => getTalentStatKeyVariant("electro", stats),
         }, (con) => con >= 6 && {

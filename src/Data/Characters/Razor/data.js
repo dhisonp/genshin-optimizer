@@ -53,7 +53,7 @@ const formula = {
     dmg: (tlvl, stats) => basicDMGFormula(data.burst.dmg[tlvl], stats, "burst"),
   },
   constellation6: {
-    dmg: (tlvl, stats) => basicDMGFormula(data.burst.summon[tlvl], stats, "burst"),
+    dmg: (tlvl, stats) => basicDMGFormula(data.burst.summon[tlvl], stats, "electro"),
   }
 }
 

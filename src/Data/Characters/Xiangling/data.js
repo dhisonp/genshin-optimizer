@@ -39,7 +39,7 @@ export const data = {
 }
 const formula = {
   normal: Object.fromEntries(data.normal.hitArr.map((arr, i) =>
-    [i, (tlvl, stats) => basicDMGFormula((i == 2 ? 2 : i === 3 ? 4 : 1) * (arr[tlvl]), stats, "normal")])),
+    [i, (tlvl, stats) => basicDMGFormula((i === 2 ? 2 : i === 3 ? 4 : 1) * (arr[tlvl]), stats, "normal")])),
   charged: Object.fromEntries(Object.entries(data.charged).map(([name, arr]) =>
     [name, (tlvl, stats) => basicDMGFormula(arr[tlvl], stats, "charged")])),
   plunging: Object.fromEntries(Object.entries(data.plunging).map(([name, arr]) =>

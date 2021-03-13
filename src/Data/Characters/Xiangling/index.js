@@ -39,8 +39,8 @@ const char = {
         text: <span><strong>Normal Attack</strong> Performs up to five consecutive spear strikes. <small><i>Note: the 3th attack hits twice, the 4th hits four times.</i></small></span>,
         fields: data.normal.hitArr.map((percentArr, i) =>
         ({
-          text: `${i + (i < 3 ? 1 : 0)}-Hit DMG`,
-          formulaText: (tlvl, stats) => <span>{i === 4 ? "4 × " : ""}{percentArr[tlvl]}% {Stat.printStat(getTalentStatKey("normal", stats), stats)}</span>,
+          text: `${i + 1}-Hit DMG`,
+          formulaText: (tlvl, stats) => <span>{i === 2 ? "2 × " : i === 3 ? "4 × " : ""}{percentArr[tlvl]}% {Stat.printStat(getTalentStatKey("normal", stats), stats)}</span>,
           formula: formula.normal[i],
           variant: (tlvl, stats) => getTalentStatKeyVariant("normal", stats),
         }))
@@ -90,9 +90,19 @@ const char = {
         }, {
           text: "CD",
           value: "12s",
-        }, (con, a) => con >= 1 && {
-          text: "Opponents hit by Guoba's attacks have their Pyro RES reduced by 15% for 6s",
-        }]
+        }],
+        conditional: (tlvl, c) => c >= 1 && {
+          type: "character",
+          conditionalKey: "CrispyOutsideTenderInside",
+          condition: "Opponents hit by Gouba",
+          sourceKey: "xiangling",
+          maxStack: 1,
+          stats: { pyro_enemyRes_: 15 },
+          fields: [{
+            text: "Duration",
+            value: "6s",
+          }]
+        }
       }],
     },
     burst: {
@@ -100,8 +110,7 @@ const char = {
       img: burst,
       document: [{
         text: <span>
-          <p className="mb-2">Displaying her mastery over both fire and polearms, Xiangling sends a Pyronado whirling around her.
- The Pyronado will move with your character for the ability's duration, dealing <span className="text-pyro">Pyro DMG</span> to all opponents in its path.</p>
+          <p className="mb-2">Displaying her mastery over both fire and polearms, Xiangling sends a Pyronado whirling around her. The Pyronado will move with your character for the ability's duration, dealing <span className="text-pyro">Pyro DMG</span> to all opponents in its path.</p>
         </span>,
         fields: [{
           text: "1-Hit Swing DMG",
@@ -133,20 +142,40 @@ const char = {
         }, {
           text: "Energy Cost",
           value: 80,
-        }, (con, a) => con >= 6 && {
-          text: "For the duration of Pyronado, all party members receive a 15% Pyro DMG Bonus.",
-        }]
+        }],
+        conditional: (tlvl, c) => c >= 6 && {
+          type: "character",
+          conditionalKey: "CondensedPyronado",
+          condition: "During Pyronado",
+          sourceKey: "xiangling",
+          maxStack: 1,
+          stats: { pyro_dmg_: 15 },//TODO: party buff
+        }
       }],
     },
     passive1: {
       name: "Crossfire",
       img: passive1,
-      document: [{ text:<span>Increases the flame range of Guoba by 20%.</span> }],
+      document: [{ text: <span>Increases the flame range of Guoba by 20%.</span> }],
     },
     passive2: {
       name: "Beware, It's Super Hot!",
       img: passive2,
-      document: [{ text: <span>When Guoba Attack's effect ends, Guoba leaves a chili pepper on the spot where it disappeared. Picking up a chili pepper increases ATK by 10% for 10s.</span> }],
+      document: [{
+        text: <span>When Guoba Attack's effect ends, Guoba leaves a chili pepper on the spot where it disappeared. Picking up a chili pepper increases ATK by 10% for 10s.</span>,
+        conditional: (tlvl, c, a) => a >= 4 && {
+          type: "character",
+          conditionalKey: "BewareItsSuperHot",
+          condition: "Pick up chili pepper",
+          sourceKey: "xiangling",
+          maxStack: 1,
+          stats: { atk_: 10 },//TODO: party buff
+          fields: [{
+            text: "Duration",
+            value: "10s",
+          }]
+        }
+      }],
     },
     passive3: {
       name: "Chef de Cuisine",
@@ -161,7 +190,15 @@ const char = {
     constellation2: {
       name: "Oil Meets Fire",
       img: c2,
-      document: [{ text: <span>The last attack in a Normal Attack sequence applies the Implode status onto the opponent for 2s. An explosion will occur once this duration ends, dealing 75% of Xiangling's ATK as <span className="text-pyro">AoE Pyro DMG</span>.</span> }],
+      document: [{
+        text: <span>The last attack in a Normal Attack sequence applies the Implode status onto the opponent for 2s. An explosion will occur once this duration ends, dealing 75% of Xiangling's ATK as <span className="text-pyro">AoE Pyro DMG</span>.</span>,
+        fields: [(con) => con >= 2 && {
+          text: "Explosion DMG",
+          formulaText: (tlvl, stats, c) => <span>75% {Stat.printStat(getTalentStatKey("elemental", stats), stats)}</span>,
+          formula: formula.burst.hit1,
+          variant: (tlvl, stats) => getTalentStatKeyVariant("elemental", stats),
+        }]
+      }],
     },
     constellation3: {
       name: "Deepfry",
